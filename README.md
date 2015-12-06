@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/amesken/artifactory:latest.svg)](https://imagelayers.io/?images=amesken/artifactory:latest 'Get your own badge on imagelayers.io')
+
 # Artifactory
 
 Run [Artifactory](http://www.jfrog.com/home/v_artifactory_opensource_overview) inside a Docker container.

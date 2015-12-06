@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Artifactory by amesken</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Artifactory</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/amesken/artifactory/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/amesken/artifactory/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/amesken/artifactory" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="artifactory" class="anchor" href="#artifactory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Artifactory</h1>
+
+<p>Run <a href="http://www.jfrog.com/home/v_artifactory_opensource_overview">Artifactory</a> inside a Docker container.
+This image is based on the following image:
+Link: <a href="https://registry.hub.docker.com/u/mattgruter/artifactory/">mattgruter/artifactory</a></p>
+
+<p>(this image is using the open source version of artifactory and storers data in the embedded derby database)</p>
+
+<h2>
+<a id="volumes" class="anchor" href="#volumes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Volumes</h2>
+
+<p>Artifactories <code>data</code>, <code>logs</code> and <code>backup</code> directories are exported as volumes:</p>
+
+<pre><code>&lt;USER_HOME&gt;/docker/data/artifactory/data
+&lt;USER_HOME&gt;/docker/data/artifactory/logs
+&lt;USER_HOME&gt;/docker/data/artifactory/backup
+</code></pre>
+
+<h2>
+<a id="ports" class="anchor" href="#ports" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ports</h2>
+
+<p>The service is exposed through port <code>8081</code>.</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p>To run artifactory do:</p>
+
+<pre><code>docker run -p 18081:8081 amesken/artifactory
+</code></pre>
+
+<p>Now point your browser to <a href="http://192.168.99.100:18081/artifactory">http://192.168.99.100:18081/artifactory</a></p>
+
+<p>Administration is done by user <code>admin</code> with password <code>password</code>.</p>
+
+<h2>
+<a id="urls" class="anchor" href="#urls" aria-hidden="true"><span class="octicon octicon-link"></span></a>URLs</h2>
+
+<p>The artifactory servlet is available at the <code>artifactory/</code> path. However a filter redirects all paths outside of <code>artifactory/</code> to the artifactory servlet. Thus instead of linking to the URL <a href="http://192.168.99.100:18081/artifactory/libs-release-local">http://192.168.99.100:18081/artifactory/libs-release-local</a> you can just link to <a href="http://192.168.99.100:18081/libs-release-local">http://192.168.99.100:18081/libs-release-local</a> (i.e. omitting the subpath <code>artifactory/</code>).</p>
+
+<h2>
+<a id="runtime-options" class="anchor" href="#runtime-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Runtime options</h2>
+
+<p>Inject the environment variable <code>RUNTIME_OPTS</code> when starting a container to set Tomcat's runtime options (i.e. <code>CATALANA_OPTS</code>). The most common use case is to set the heap size:</p>
+
+<pre><code>docker run -e RUNTIME_OPTS="-Xms256m -Xmx512m" -P amesken/artifactory
+</code></pre>
+
+<h1>
+<a id="advanced-artifactory" class="anchor" href="#advanced-artifactory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Artifactory</h1>
+
+<h2>
+<a id="switching-to-artifactory-pro" class="anchor" href="#switching-to-artifactory-pro" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switching to Artifactory Pro</h2>
+
+<p>If you are using Artifactory Pro, the artifactory war archive has to be replaced. The image tagged <code>-onbuild</code> is built with an <code>ONBUILD</code> trigger for this purpose. Unpack the Artifactory Pro distribution ZIP file and place the file <code>artifactory.war</code> (located in the archive) in the same directory as a simple Dockerfile that extends the <code>onbuild</code> image:</p>
+
+<pre><code># Dockerfile for Artifactory Pro
+FROM mattgruter/artifactory:latest-onbuild
+</code></pre>
+
+<p>Now build your child docker image:</p>
+
+<pre><code>docker build -t yourname/myartifactory .
+</code></pre>
+
+<p>The <code>ONBUILD</code> trigger ensures your <code>artifactory.war</code> is picked up and applied to the image upon build.</p>
+
+<pre><code>docker run -P yourname/myartifactory
+</code></pre>
+
+<h2>
+<a id="context-of-this-image" class="anchor" href="#context-of-this-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>Context of this image</h2>
+
+<p>This artifactory image is originally created to work with a complete Continuous Delivery tool stack which can be obtained from <a href="https://hub.docker.com/r/amesken/cd-tool-stack/">docker</a> or <a href="https://github.com/amesken/cd-tool-stack">github</a>.
+The image is based on <a href="https://blog.codecentric.de/en/2015/10/continuous-integration-platform-using-docker-container-jenkins-sonarqube-nexus-gitlab">this blog article</a> by Marcel Birkner.</p>
+      </section>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-70105547-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
